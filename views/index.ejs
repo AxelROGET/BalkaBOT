@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>BalkaBOT</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <header>
+      <nav>
+        <li><a href="#">Experience</a></li>
+        <li><a href="#">Nouveaux utilisateurs</a></li>
+        <li><a href="#">Traqueur d'invitations</a></li>
+        <li><a href="#">Modération</a></li>
+        <li>
+          <a href="https://discord.gg/3HYz9N2" target="blank"
+            >Serveur de support</a
+          >
+        </li>
+      </nav>
+    </header>
+
+    <h1>Mettez en avant votre serveur Discord</h1>
+
+    <h3>Modérez, Automatisez, Partagez</h3>
+
+
+      <a
+        style="color: white"
+        href="https://discord.com/api/oauth2/authorize?client_id=714506093199622164&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fdashboard&response_type=code&scope=identify%20guilds"
+        >Redirection localhost:5000</a
+      >
+      <br>
+
+      <a
+        class="button_connect_with_discord"
+        href="https://discord.com/api/oauth2/authorize?client_id=714506093199622164&redirect_uri=https%3A%2F%2Fbalkabot.herokuapp.com%2Fdashboard&response_type=code&scope=identify%20guilds"
+        >Se connecter avec Discord</a
+      >
+
+      <% if(cookies.guilds){ %>
+      <a class="button_connect_with_discord" href="/dashboard" style="background-color: black;">Tableau de bord</a>
+      <%}%>
+  </body>
+</html>

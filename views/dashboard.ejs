@@ -1,0 +1,66 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+
+    <link rel="stylesheet" href="dashboard.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=Goldman&display=swap" rel="stylesheet">
+  </head>
+
+  <body style="background-color: #34383c">
+    <header>
+      <nav>
+        <li><a class="header" href="http://localhost:5000/">BalkaBOT</a></li>
+        <li><a class="header" href="#">Mes serveurs</a></li>
+        <li><a href="#" class="header">Premium</a></li>
+        <li>
+          <a
+            class="connect_button"
+            href="https://discord.com/api/oauth2/authorize?client_id=714506093199622164&redirect_uri=https%3A%2F%2Fbalkabot.herokuapp.com%2Fdashboard&response_type=code&scope=identify%20guilds"
+            >Se connecter avec Discord</a
+          >
+        </li>
+      </nav>
+    </header>
+
+    <p>Vous êtes connecté avec succès en tant que <%= user_info.username %></p>
+
+    <main>
+      <% user_guilds.forEach(function(guild) { %>
+
+        <% if(all_guilds.includes(guild.id)) { %>
+          <a href="/dashboard/<%=guild.id%>">
+        <% } else { %>
+          <a href="https://discord.com/api/oauth2/authorize?client_id=714506093199622164&permissions=8&scope=bot" target="blank">
+        <% } %>
+
+      <div class="guild">
+        <div class="guild_info">
+          <img
+            class="guild_icon"
+            src="https://cdn.discordapp.com/icons/<%=guild.id %>/<%=guild.icon %>.jpg"
+            alt="Logo de <%=guild.name%>"
+          />
+          <span><%=guild.name%></span>
+        </div>
+
+        <% if(all_guilds.includes(guild.id)){ %>
+          <button class="button dashboard" type="button" id="<%=guild.id%>">
+            Tableau de bord
+          </button>
+        <% } else { %>
+          <button class="button invite" type="button" id="<%=guild.id%>">
+            Inviter BalkaBOT
+          </button>
+        <% } %>
+      </div>
+      </a>
+      <% }) %>
+    </main>
+  </body>
+</html>
