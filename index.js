@@ -3,6 +3,8 @@ const client = new Discord.Client({
   partials: ["USER", "GUILD_MEMBER", "CHANNEL", "MESSAGE", "REACTION"],
 });
 
+/* Bonsoir à tous */
+
 const mongodb = require("./API/mongodb.js");
 
 const { readdirSync } = require("fs");
@@ -146,9 +148,6 @@ function find_infos(URL, info) {
 }
 
 function guild_page(guilds, req, res) {
-
-  
-
   guilds
     .filter((guild) => guild.permissions === 2147483647)
     .forEach((guild) => {
