@@ -1,5 +1,4 @@
 {
-  "TOKEN": "NzE0NTA2MDkzMTk5NjIyMTY0.Xsvppw.2OVLvBxdkt5nmAZ1NIGkSA1sDrw",
   "prefix": "!",
   "guildDefaultUrlInvite": "https://discord.gg/3HYz9N2",
   "inviteBotToGuild": "https://discord.com/api/oauth2/authorize?client_id=714506093199622164&permissions=8&scope=bot",
@@ -23,6 +22,6 @@
     "bleu": "#3254D5"
   },
 
-  "redirect_url": "https://balkabot.tk/",
-  "_redirect_url": "http://localhost:5000/"
+  "_redirect_url": "https://balkabot.tk/",
+  "redirect_url": "http://localhost:5000/"
 }

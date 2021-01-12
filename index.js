@@ -3,13 +3,15 @@ const client = new Discord.Client({
   partials: ["USER", "GUILD_MEMBER", "CHANNEL", "MESSAGE", "REACTION"],
 });
 
+require("dotenv").config();
+
 const mongodb = require("./API/mongodb.js");
 
 const { readdirSync } = require("fs");
 
 const config = require("./config.json");
 
-client.login(config.TOKEN);
+client.login(process.env.TOKEN);
 
 function loadEvent(eventName) {
   const event = require(`./events/${eventName}`);
