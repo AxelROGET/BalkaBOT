@@ -23,6 +23,6 @@
     "bleu": "#3254D5"
   },
 
-  "_redirect_url": "https://balkabot.herokuapp.com/",
-  "redirect_url": "http://localhost:5000/"
+  "redirect_url": "https://balkabot.tk/",
+  "_redirect_url": "http://localhost:5000/"
 }

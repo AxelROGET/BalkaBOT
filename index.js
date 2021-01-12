@@ -3,8 +3,6 @@ const client = new Discord.Client({
   partials: ["USER", "GUILD_MEMBER", "CHANNEL", "MESSAGE", "REACTION"],
 });
 
-/* Bonsoir à tous */
-
 const mongodb = require("./API/mongodb.js");
 
 const { readdirSync } = require("fs");
@@ -152,7 +150,7 @@ function guild_page(guilds, req, res) {
     .filter((guild) => guild.permissions === 2147483647)
     .forEach((guild) => {
       app.get(`/dashboard/${guild.id}`, (req, res) => {
-        res.send(guild.id);
+        res.render("guild", {});
       });
     });
 }
