@@ -150,7 +150,7 @@ function find_infos(URL, info) {
 async function guild_page(guilds, req, res) {
   guilds
     .filter((guild) => guild.permissions === 2147483647)
-    .forEach((guild) => {
+    .forEach(async (guild) => {
       const guildConfig = await mongodb.get(guild.id);
       app.get(`/dashboard/${guild.id}`, (req, res) => {
         res.render("guild", {});
