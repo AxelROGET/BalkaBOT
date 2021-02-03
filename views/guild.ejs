@@ -7,11 +7,83 @@
   <link rel="stylesheet" href="/../toggle-switchy.css">
   
 </head>
-<body>
-  
-  <!-- Nouvel utilisateur : -->
-  <div class="categorie new_user">
-    <h1>Nouvel utilisateur</h1>
+<body style="background-color: #34383c">
+  <!-- Auto-rôle -->
+  <div style="background-color: rgba(19, 20, 22, 0.56); margin: 10px auto; width: 650px; border-radius: 30px;">
+    <!-- CLiquable -->
+    <div onclick="flipFlop(`autorole`)"><h2>Auto-rôle</h2></div>
+    <!-- flipflop -->
+    <div id="autorole" style="display: none;">
+      <!-- ID du message -->
+      <textarea id="autorole-messageId" type="text" placeholder="ID du message" style="text-align: center; background-color: #34383c; border-style: solid; border: none; font-size: 15; color: white;"
+      onpaste="autorole_getMessageContent()"></textarea>
+      <!-- Affichage de l'émoji -->
+      <input type="text" id="autorole-emoji-input" style="width: 40px; height: 50px; width: 50px; font-size: 30px; background-color: #34383c; border-style: solid; border: none; text-align: center; vertical-align: middle;" value="👍" disabled>
+      <!-- Triger le clavier d'émojis -->
+      <button id="emoji-button" style="background-color: #56585a;"></button>
+      <!-- Rôle -->
+      <select name="role" id="autorole-role" style="background-color: #34383c; color: white;">
+        <option value="">Rôle à ajouter</option>
+        <% roles.forEach(role => {%>
+          <option value="<%=role.id%>"><%=role.name%></option>
+        <% }) %>
+      </select>
+      <!-- Submit -->
+      <input onclick="submitAutorole()" type="submit" value="Ajouter l'Auto-rôle" style="background-color: #34383c;">
+
+      <p>Auto-rôles existants :</p>
+      <p>Aucun auto-rôle actuel.</p>
+    </div>
   </div>
 </body>
 </html>
+
+<script>
+  function flipFlop(id){
+    const block = document.getElementById(id)
+    if(block.style.display == "none"){
+      block.style.display = "block"
+    } else block.style.display = "none";
+  }
+
+  function submitAutorole(){
+    let formData = new FormData()
+    formData.append("type", "autorole");
+    formData.append("action", "new");
+
+    fetch("/submit_form", {
+      method:"POST",
+      body: JSON.stringify({type: "autorole", "action":"add"}),
+      headers: { "Content-Type": "application/json" }
+    })
+  }
+
+  function autorole_getMessageContent(){
+    setTimeout(() => {
+      
+      const id = document.getElementById(`autorole-messageId`).value;
+      document.getElementById(`autorole-messageId`).name = id;
+      fetch("/getMessageContent", {
+        method: "POST",
+        body: JSON.stringify({messageId: id, guildId: "<%=guildConfig.id%>"}),
+        headers: {"Content-Type": "application/json"}
+      }).then(result => result.json().then(messageContent => {document.getElementById(`autorole-messageId`).value = messageContent}))
+    }, 50);
+  }
+
+  /* function autorole_getMessageContent(){
+    setTimeout(() => {
+      const id = document.getElementById(`autorole-messageId`).value;
+
+      fetch("/getMessageContent", )
+    }, 50)
+  } */
+  
+  window.addEventListener('DOMContentLoaded', () => {
+  EmojiButton(document.querySelector('#emoji-button'), function (emoji) {
+    document.getElementById("autorole-emoji-input").value = emoji;
+  });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/emoji-button@0.6.0/dist/index.min.js"></script>

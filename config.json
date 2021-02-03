@@ -22,6 +22,6 @@
     "bleu": "#3254D5"
   },
 
-  "redirect_url": "https://balkabot.tk/",
-  "_redirect_url": "http://localhost:5000/"
+  "_redirect_url": "https://balkabot.tk/",
+  "redirect_url": "http://localhost:5000/"
 }

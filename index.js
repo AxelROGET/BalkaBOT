@@ -31,6 +31,7 @@ const FormData = require("form-data");
 var cookieParser = require("cookie-parser");
 app.use(cookieParser());
 const bodyParser = require("body-parser");
+app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, "views")));
@@ -40,6 +41,12 @@ app.get("/", (req, res) => {
 });
 const port = process.env.PORT || "5000";
 app.listen(port, () => console.log(`Server started on Port ${port}`));
+
+/* app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+}); */
 
 app.get("/cookies/view", (req, res) => {
   res.send(req.cookies);
@@ -131,9 +138,25 @@ app.post("/submit_form", (req, res) => {
   res.redirect("/");
 });
 
-app.post("/connect_with_discord_button", (req, res) => {
+app.get("/fetch-test", (req, res) => {
+
+})
+
+app.use("/getMessageContent", (req, res) => {
+  console.log(req.body)
+
+  //client.channels.cache.get("714499790250967112").messages.fetch("805921321086746705").then(console.log)
+
+  client.guilds.cache.get(req.body.guildId).channels.cache.array().forEach(channel => {
+    if(channel.type === "text" || channel.type === "news") {
+      channel.messages.fetch(req.body.messageId).then(message => {res.json(message.content)}).catch(catchBlock => {})
+    }
+  })
+})
+
+/* app.post("/connect_with_discord_button", (req, res) => {
   console.log(req.body);
-});
+}); */
 
 function find_infos(URL, info) {
   return fetch(URL, {
@@ -151,9 +174,10 @@ async function guild_page(guilds, req, res) {
   guilds
     .filter((guild) => guild.permissions === 2147483647)
     .forEach(async (guild) => {
-      const guildConfig = await mongodb.get(guild.id);
+      
+      const guildConfig = await mongodb.get({id: guild.id}, "guildsConfig")
       app.get(`/dashboard/${guild.id}`, (req, res) => {
-        res.render("guild", {});
+        res.render("guild", {guildConfig: guildConfig, roles: client.guilds.cache.get(guild.id).roles.cache.array()});
       });
     });
 }
