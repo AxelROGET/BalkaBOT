@@ -19,6 +19,8 @@ module.exports = (client) => {
 
   client.user.setActivity("!help", { type: "WATCHING" });
 
+  module.exports.client = client;
+
   /* client.channels.cache.get("693495587995385881").send(
     new Discord.MessageEmbed({
       color: "#069740",

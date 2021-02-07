@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 const client = new Discord.Client({
   partials: ["USER", "GUILD_MEMBER", "CHANNEL", "MESSAGE", "REACTION"],
 });
+require("./API/mongoose")
 
 require("dotenv").config();
 
@@ -31,6 +32,7 @@ const FormData = require("form-data");
 var cookieParser = require("cookie-parser");
 app.use(cookieParser());
 const bodyParser = require("body-parser");
+const { reactRole } = require("./API/mongoose");
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -133,26 +135,20 @@ app.get("/dashboard", (req, res) => {
   }
 });
 
-app.post("/submit_form", (req, res) => {
-  console.log(req.body);
-  res.redirect("/");
+app.use("/submit_form", (req, res) => {
+  switch(req.body.type){
+    case "autorole": require("./config/autorole")(req, res); break;
+  }
 });
 
-app.get("/fetch-test", (req, res) => {
-
-})
-
 app.use("/getMessageContent", (req, res) => {
-  console.log(req.body)
-
-  //client.channels.cache.get("714499790250967112").messages.fetch("805921321086746705").then(console.log)
-
-  client.guilds.cache.get(req.body.guildId).channels.cache.array().forEach(channel => {
+    client.guilds.cache.get(req.body.guildId).channels.cache.array().forEach(channel => {
     if(channel.type === "text" || channel.type === "news") {
       channel.messages.fetch(req.body.messageId).then(message => {res.json(message.content)}).catch(catchBlock => {})
     }
   })
 })
+
 
 /* app.post("/connect_with_discord_button", (req, res) => {
   console.log(req.body);
@@ -174,10 +170,27 @@ async function guild_page(guilds, req, res) {
   guilds
     .filter((guild) => guild.permissions === 2147483647)
     .forEach(async (guild) => {
-      
-      const guildConfig = await mongodb.get({id: guild.id}, "guildsConfig")
-      app.get(`/dashboard/${guild.id}`, (req, res) => {
-        res.render("guild", {guildConfig: guildConfig, roles: client.guilds.cache.get(guild.id).roles.cache.array()});
+
+      app.get(`/dashboard/${guild.id}`, async (req, res) => {
+
+        const guildConfig = await mongodb.get({id: guild.id}, "guildsConfig");
+        const reactRoleDB = await reactRole.find({guild: guild.id});
+        let guildReactRole = []
+        reactRoleDB.forEach(i => {
+          guildReactRole.push({
+            message: i.messageContent,
+            reaction: i.reaction,
+            role: client.guilds.cache.get(guild.id).roles.cache.get(i.role).name,
+            token: i._id,
+          })
+        })
+
+        console.log(guildReactRole)
+        res.render("guild", {
+          guildConfig: guildConfig, 
+          roles: client.guilds.cache.get(guild.id).roles.cache.array().filter(role => role.name !== "@everyone"),
+          reactRoles: guildReactRole,
+      });
       });
     });
 }

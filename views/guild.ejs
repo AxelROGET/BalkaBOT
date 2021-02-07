@@ -29,16 +29,24 @@
         <% }) %>
       </select>
       <!-- Submit -->
-      <input onclick="submitAutorole()" type="submit" value="Ajouter l'Auto-rôle" style="background-color: #34383c;">
+      <input onclick="submitAutorole()" type="submit" value="Ajouter l'Auto-rôle"
+       style="background-color: #34383c; border-style: solid; border: none; color: white; font-size: 17px; margin: 3px;">
 
       <p>Auto-rôles existants :</p>
-      <p>Aucun auto-rôle actuel.</p>
+      <div id="guild_reactRoles">
+        <% reactRoles.forEach(reactRole => { %>
+
+            <p id="<%=reactRole.token%>"><%=reactRole.message%> : <%=reactRole.reaction%> => <%=reactRole.role%> <img onclick="autorole_delete(`<%=reactRole.token%>`)" style="float: right;" src="/icon/delete.svg"></p>       
+
+        <% }) %>
+      </div>
     </div>
   </div>
 </body>
 </html>
 
 <script>
+
   function flipFlop(id){
     const block = document.getElementById(id)
     if(block.style.display == "none"){
@@ -48,36 +56,70 @@
 
   function submitAutorole(){
     let formData = new FormData()
-    formData.append("type", "autorole");
-    formData.append("action", "new");
+
+    const messageId = document.getElementById("autorole-messageId").name;
+    const messageContent = document.getElementById("autorole-messageId").value;
+    const reaction = document.getElementById("autorole-emoji-input").value;
+    const roleId = document.getElementById("autorole-role").value;
+
+    if(!messageId || !reaction || !roleId) {alert("Veuillez compléter tous les champs."); return}
 
     fetch("/submit_form", {
       method:"POST",
-      body: JSON.stringify({type: "autorole", "action":"add"}),
+      body: JSON.stringify({
+        type: "autorole", 
+        action:"add",
+        message: messageId,
+        messageContent: messageContent,
+        reaction: reaction,
+        role: roleId, 
+        token: "<%=guildConfig._id%>",
+        guild: "<%=guildConfig.id%>",
+      }),
       headers: { "Content-Type": "application/json" }
+    }).then(response => {
+      // ReactRole ajouté
+      if(response.status === 200){
+        const roles = <%-JSON.stringify(roles)%>
+        const roleName = roles.find(role => role.id == roleId).name
+        document.getElementById("guild_reactRoles").innerHTML += `<p>${messageContent} : ${reaction} => ${roleName}</p>`
+      }
     })
   }
 
   function autorole_getMessageContent(){
+
     setTimeout(() => {
       
       const id = document.getElementById(`autorole-messageId`).value;
-      document.getElementById(`autorole-messageId`).name = id;
       fetch("/getMessageContent", {
         method: "POST",
         body: JSON.stringify({messageId: id, guildId: "<%=guildConfig.id%>"}),
         headers: {"Content-Type": "application/json"}
-      }).then(result => result.json().then(messageContent => {document.getElementById(`autorole-messageId`).value = messageContent}))
+      }).then(result => result.json().then(messageContent => {
+        document.getElementById(`autorole-messageId`).name = id;
+        document.getElementById(`autorole-messageId`).value = messageContent;
+        document.getElementById(`autorole-messageId`).disabled = true}))
     }, 50);
   }
 
-  /* function autorole_getMessageContent(){
-    setTimeout(() => {
-      const id = document.getElementById(`autorole-messageId`).value;
-
-      fetch("/getMessageContent", )
-    }, 50)
-  } */
+  function autorole_delete(token){
+    console.log(token);
+    fetch("/submit_form", {
+      method: "POST",
+      body: JSON.stringify({
+        type: "autorole",
+        action: "remove",
+        token: token,
+        guild: "<%=guildConfig.id%>",
+      }),
+      headers: { "Content-Type": "application/json" }
+    }).then(response => {
+      if(response.status === 200){
+        document.getElementById(token).innerHTML = ""
+      }
+    })
+  }
   
   window.addEventListener('DOMContentLoaded', () => {
   EmojiButton(document.querySelector('#emoji-button'), function (emoji) {
