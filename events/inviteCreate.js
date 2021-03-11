@@ -9,5 +9,4 @@ module.exports = (client) => {
   });
 
   module.exports.invites = guildInvites;
-  console.log(guildInvites);
 };

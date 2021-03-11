@@ -3,17 +3,58 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="/../style.css">
-  <link rel="stylesheet" href="/../toggle-switchy.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/toggle-switchy.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.0.0/magnific-popup.css">
+  <link rel="stylesheet" href="/css/animation.css">
   
 </head>
-<body style="background-color: #34383c">
+<body style="text-align: left;">
+
+    <div class="clickable" id="clickable-reactRoles">
+      <div class="from">
+        <div class="from-contents">          
+          <div class="header">
+            <img class="categorie_icon" src="/icon/thumup.png" alt="Réaction-Rôle icon">
+            <h2 class="nom_categorie">Réaction-Rôle</h2>           
+          </div>
+          <p class="categorie_description">Permet aux membres d'obtenir des rôles en réagissant à des messages.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal" id="popup-reactRoles">
+      <div class="modal-content" style="background-color: #2F3336;"><h1>Fonctionnalité en cours de développement </h1></div>
+      
+    </div>
+
+
+
+
+
+
   <!-- Auto-rôle -->
-  <div style="background-color: rgba(19, 20, 22, 0.56); margin: 10px auto; width: 650px; border-radius: 30px;">
+  <div class="categorie">
     <!-- CLiquable -->
-    <div onclick="flipFlop(`autorole`)"><h2>Auto-rôle</h2></div>
+    <div onclick="flipFlop(`autorole`)" class="categorie_header">
+      <!-- Icon (gauche) -->
+      <img class="categorie_icon" src="/icon/thumup.png" alt="Réaction-Rôle icon">
+
+      <!-- Titre & description (droite) -->
+      <div>
+        <h2 class="nom_categorie">Réaction-Rôle</h2>
+        <p class="categorie_description">Permet aux membres d'obtenir des rôles en réagissant à des messages.</p>
+        <div id="autorole" class="screen mfp-zoom-in">
+          <div class="window mfp-zoom-in">
+            
+          </div>
+        </div>
+      </div>
+      
+    </div>
     <!-- flipflop -->
-    <div id="autorole" style="display: none;">
+    <div class="hide">
       <!-- ID du message -->
       <textarea id="autorole-messageId" type="text" placeholder="ID du message" style="text-align: center; background-color: #34383c; border-style: solid; border: none; font-size: 15; color: white;"
       onpaste="autorole_getMessageContent()"></textarea>
@@ -36,7 +77,7 @@
       <div id="guild_reactRoles">
         <% reactRoles.forEach(reactRole => { %>
 
-            <p id="<%=reactRole.token%>"><%=reactRole.message%> : <%=reactRole.reaction%> => <%=reactRole.role%> <img onclick="autorole_delete(`<%=reactRole.token%>`)" style="float: right;" src="/icon/delete.svg"></p>       
+            <p style="background-color: black; margin-top: 20px;" id="<%=reactRole.token%>"><%=reactRole.message%> : <%=reactRole.reaction%> => <%=reactRole.role%> <img onclick="autorole_delete(`<%=reactRole.token%>`)" style="float: right;" src="/icon/delete.svg"></p>       
 
         <% }) %>
       </div>
@@ -47,11 +88,11 @@
 
 <script>
 
-  function flipFlop(id){
-    const block = document.getElementById(id)
-    if(block.style.display == "none"){
-      block.style.display = "block"
-    } else block.style.display = "none";
+  let popup_reactionRoles = document.getElementById("popup-reactRoles");
+  let clickable_reactRoles = document.getElementById("clickable-reactRoles");
+
+  clickable_reactRoles.onclick = function(){
+    popup_reactionRoles.style.display = "table-row"
   }
 
   function submitAutorole(){
@@ -127,5 +168,7 @@
   });
 });
 </script>
+
+<script src="/guild.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/emoji-button@0.6.0/dist/index.min.js"></script>
